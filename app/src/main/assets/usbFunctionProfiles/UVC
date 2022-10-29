@@ -1,0 +1,103 @@
+#!/bin/sh
+
+GADGET_PATH="____gadgetPath____"
+
+cd $GADGET_PATH/configs/
+CONFIG_PATH="$GADGET_PATH/configs/`ls -1 | head -1`/"
+STRINGS_PATH="$GADGET_PATH/strings/0x409/"
+FUNCTION_PATH="$GADGET_PATH/functions/uvc.usb0"
+
+mkdir -p $FUNCTION_PATH
+cd $FUNCTION_PATH
+
+echo 3072 > streaming_maxpacket
+echo 10 > streaming_maxburst
+
+mkdir -p control/header/h
+ln -s control/header/h control/class/fs
+ln -s control/header/h control/class/ss
+ln -s control/header/h control/class/hs
+
+# uncompressed
+mkdir -p $FUNCTION_PATH/streaming/uncompressed/u/360p
+cd $FUNCTION_PATH/streaming/uncompressed/u/360p
+echo "666666\n1000000\n5000000\n" > dwFrameInterval
+
+mkdir -p $FUNCTION_PATH/streaming/uncompressed/u/720p
+cd $FUNCTION_PATH/streaming/uncompressed/u/720p
+echo 1280 > wWidth
+echo 720 > wHeight
+echo 29491200 > dwMinBitRate
+echo 29491200 > dwMaxBitRate
+echo 1843200 > dwMaxVideoFrameBufferSize
+echo "5000000\n" > dwFrameInterval
+echo 5000000 > dwDefaultFrameInterval
+
+
+# mjpeg
+mkdir -p $FUNCTION_PATH/streaming/mjpeg/m/360p
+cd $FUNCTION_PATH/streaming/mjpeg/m/360p
+echo 640 > wWidth
+echo 360 > wHeight
+echo 18432000 > dwMinBitRate
+echo 55296000 > dwMaxBitRate
+echo 460800 > dwMaxVideoFrameBufferSize
+echo "333333\n666666\n1000000\n5000000\n" > dwFrameInterval
+echo 333333 > dwDefaultFrameInterval
+
+mkdir -p $FUNCTION_PATH/streaming/mjpeg/m/720p
+cd $FUNCTION_PATH/streaming/mjpeg/m/720p
+echo 1280 > wWidth
+echo 720 > wHeight
+echo 29491200 > dwMinBitRate
+echo 29491200 > dwMaxBitRate
+echo 1843200 > dwMaxVideoFrameBufferSize
+echo "333333\n666666\n1000000\n5000000\n" > dwFrameInterval
+echo 333333 > dwDefaultFrameInterval
+
+mkdir -p $FUNCTION_PATH/streaming/mjpeg/m/1080p
+cd $FUNCTION_PATH/streaming/mjpeg/m/1080p
+echo 1920 > wWidth
+echo 1080 > wHeight
+echo 66355200 > dwMinBitRate
+echo 995328000 > dwMaxBitRate
+echo 4147200 > dwMaxVideoFrameBufferSize
+echo "333333\n666666\n1000000\n5000000\n" > dwFrameInterval
+echo 333333 > dwDefaultFrameInterval
+
+mkdir -p $FUNCTION_PATH/streaming/mjpeg/m/2160p
+cd $FUNCTION_PATH/streaming/mjpeg/m/2160p
+echo 3840 > wWidth
+echo 2160 > wHeight
+echo 265420800 > dwMinBitRate
+echo 3981312000 > dwMaxBitRate
+echo 16588800 > dwMaxVideoFrameBufferSize
+echo "333333\n666666\n1000000\n5000000\n" > dwFrameInterval
+echo 333333 > dwDefaultFrameInterval
+
+
+# h264
+mkdir -p $FUNCTION_PATH/streaming/h264/h/960p
+cd $FUNCTION_PATH/streaming/h264/h/960p
+echo 1920 > wWidth
+echo 960 > wHeight
+echo 40 > bLevelIDC
+echo "333667\n" > dwFrameInterval
+
+mkdir -p $FUNCTION_PATH/streaming/h264/h/1920p
+cd $FUNCTION_PATH/streaming/h264/h/1920p
+echo "333667\n" > dwFrameInterval
+
+
+
+cd $FUNCTION_PATH
+mkdir -p streaming/header/h
+ln -s streaming/uncompressed/u streaming/header/h
+ln -s streaming/mjpeg/m streaming/header/h
+ln -s streaming/h264/h streaming/header/h
+ln -s streaming/header/h streaming/class/fs/
+ln -s streaming/header/h streaming/class/hs/
+ln -s streaming/header/h streaming/class/ss/
+
+
+ln -s $FUNCTION_PATH $CONFIG_PATH/uvc.usb0
